@@ -34,22 +34,16 @@ namespace AuthService.Controllers
             {
                 return Unauthorized();
             }
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_secretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(
-                [
-                new(ClaimTypes.NameIdentifier, existingUser.Id.ToString()),
-                new(ClaimTypes.Name, existingUser.Username)
-                ]),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new { Token = tokenHandler.WriteToken(token) });
+            var token = new JwtSecurityToken(
+                issuer: null, // Укажите, если используете издателя
+                audience: null, // Укажите, если используете аудиторию
+                claims:     [
+                            new(ClaimTypes.NameIdentifier, existingUser.Id.ToString()),
+                            new(ClaimTypes.Name, existingUser.Username)
+                            ],
+                expires: DateTime.Now.AddMinutes(30), // Установите время истечения
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secretKey)), SecurityAlgorithms.HmacSha256));
+            return Ok(new { Token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
     }
 }

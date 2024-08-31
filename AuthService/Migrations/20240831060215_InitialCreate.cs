@@ -11,8 +11,12 @@ namespace AuthService.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "AuthService");
+
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "AuthService",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -30,7 +34,8 @@ namespace AuthService.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "AuthService");
         }
     }
 }

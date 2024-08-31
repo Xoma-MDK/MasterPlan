@@ -8,8 +8,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-// Add services to the container.
-
 ConfigureServices(builder.Services);
 
 var app = builder.Build();
@@ -18,7 +16,6 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
     dbContext.Database.Migrate();
 }
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -32,8 +29,10 @@ app.MapControllers();
 
 app.Run();
 
-void ConfigureServices(IServiceCollection services)
+static void ConfigureServices(IServiceCollection services)
 {
+    var secretKey = Environment.GetEnvironmentVariable("SecretKey") ?? throw new ArgumentException("SecretKey");
+
     services.AddDbContext<AuthDbContext>(options =>
         options.UseNpgsql(Environment.GetEnvironmentVariable("DefaultConnection")));
 
@@ -46,7 +45,7 @@ void ConfigureServices(IServiceCollection services)
                 ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
             };
         });
 

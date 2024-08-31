@@ -1,0 +1,54 @@
+{
+  "Routes": [    {
+    "DownstreamPathTemplate": "/api/auth/{everything}", // url microservice
+    "DownstreamScheme": "http",
+    "DownstreamHostAndPorts": [
+      {
+        "Host": "auth_1",
+        "Port": 5001
+      }
+    ],
+    "UpstreamPathTemplate": "/auth/{everything}", // url api gateway
+    "UpstreamHttpMethod": [ "GET", "POST" ],
+    "SwaggerKey": "AuthService"
+  },
+    {
+      "DownstreamPathTemplate": "/api/tasks/{everything}", // url microservice
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "task_1",
+          "Port": 5002
+        }
+      ],
+      "UpstreamPathTemplate": "/tasks/{everything}", // url api gateway
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "AddClaimsToRequest": {
+        "Authorization": "Bearer {Token}"
+      },
+      "SwaggerKey": "TaskService"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "AuthService",
+      "Config": [
+        {
+          "Name": "AuthService API",
+          "Version": "v1",
+          "Url": "http://auth_1:5001/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "TaskService",
+      "Config": [
+        {
+          "Name": "TaskService API",
+          "Version": "v1",
+          "Url": "http://task_1:5002/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}

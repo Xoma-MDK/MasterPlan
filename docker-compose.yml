@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  api_gateway_1:
+    build:
+      dockerfile: ./ApiGateway/Dockerfile
+    networks:
+      - masterplannetwork
+    depends_on:
+      - postgres
+      - auth_1
+      - task_1
+    environment:
+      - SecretKey=mysupersecret_keymysupersecret_keymysupersecret_key
+      - DefaultConnection=Host=postgres;Database=MasterPlan;Username=postgres;Password=1234
+
+  auth_1:
+    build:
+      dockerfile: ./AuthService/Dockerfile
+    networks:
+      - masterplannetwork
+    depends_on:
+      - postgres
+    environment:
+      - SecretKey=mysupersecret_keymysupersecret_keymysupersecret_key
+      - DefaultConnection=Host=postgres;Database=MasterPlan;Username=postgres;Password=1234
+
+  task_1:
+    build:
+      dockerfile: ./TaskService/Dockerfile
+    networks:
+      - masterplannetwork
+    depends_on:
+      - postgres
+    environment:
+      - SecretKey=mysupersecret_keymysupersecret_keymysupersecret_key
+      - DefaultConnection=Host=postgres;Database=MasterPlan;Username=postgres;Password=1234
+
+  postgres:
+    image: postgres:16.0
+    environment:
+      POSTGRES_DB: "SPOT"
+      POSTGRES_USER: "MasterPlan"
+      POSTGRES_PASSWORD: "1234"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - 5434:5432
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - ./dbdata:/var/lib/postgresql/data
+    networks:
+      - masterplannetwork
+
+networks:
+  masterplannetwork:
+    driver: bridge

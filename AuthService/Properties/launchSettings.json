@@ -5,8 +5,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "SecretKey": "fsdfs",
-        "DefaultConnection": "Host=localhost;Database=your_db;Username=your_user;Password=your_password"
+        "SecretKey": "mysupersecret_keymysupersecret_keymysupersecret_key",
+        "DefaultConnection": "Host=localhost;Database=MasterPlan;Username=postgres;Password=1234"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5057"

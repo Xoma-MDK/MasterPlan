@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuthService.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240831053015_InitialCreate")]
+    [Migration("20240831060215_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -19,6 +19,7 @@ namespace AuthService.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("AuthService")
                 .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -42,7 +43,7 @@ namespace AuthService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "AuthService");
                 });
 #pragma warning restore 612, 618
         }
